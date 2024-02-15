@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.VideoView;
+import android.widget.Toast;
 
 public class ActivityVideo extends AppCompatActivity {
 
@@ -20,6 +21,9 @@ public class ActivityVideo extends AppCompatActivity {
 
     Button btnVideo;
 
+    Button btncompartir;
+    Uri videoUri;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +33,7 @@ public class ActivityVideo extends AppCompatActivity {
 
         videoView = findViewById(R.id.videoView2);
         btnVideo = findViewById(R.id.btnvideo);
-
+        btncompartir = findViewById(R.id.btncompartir);
 
 
         btnVideo.setOnClickListener(new View.OnClickListener() {
@@ -38,7 +42,16 @@ public class ActivityVideo extends AppCompatActivity {
                 grabarVideo();
             }
         });
+
+        btncompartir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                compartirVideo();
+            }
+        });
     }
+
+
 
 
 
@@ -57,9 +70,31 @@ public class ActivityVideo extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == peticion_video && resultCode == RESULT_OK) {
-            Uri videoUri = data.getData();
-            videoView.setVideoURI(videoUri);
-            videoView.start();
+            videoUri = data.getData();
+            if (videoUri != null) {
+                videoView.setVideoURI(videoUri);
+                videoView.start();
+            } else {
+                Toast.makeText(this, "No se pudo obtener la URI del video", Toast.LENGTH_SHORT).show();
+            }
         }
     }
+
+    private void compartirVideo() {
+        if (videoUri != null) {
+            Intent compartirIntent = new Intent(Intent.ACTION_SEND);
+            compartirIntent.setType("video/*");
+            compartirIntent.putExtra(Intent.EXTRA_STREAM, videoUri);
+            startActivity(Intent.createChooser(compartirIntent, "Compartir video"));
+        } else {
+            Toast.makeText(this, "No hay video para compartir", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 }
+
+
+
+
+
