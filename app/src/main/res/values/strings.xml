@@ -11,4 +11,5 @@
     <string name="TomarFoto">Capturar Foto\t</string>
     <string name="btnvideo">Capturar Video</string>
     <string name="btncapturarvideo">Capturar video</string>
+    <string name="btncompartir">Compartir video</string>
 </resources>
